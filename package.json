@@ -3,14 +3,16 @@
 	"description": "",
 	"license": "MIT",
 	"scripts": {
-		"build": "parallelshell 'yarn run clean' 'yarn run build:html' 'yarn run build:css' 'yarn run copy:fonts' 'yarn run copy' && yarn run build:js",
+		"build": "parallelshell 'yarn run clean' 'yarn run build:html' 'yarn run build:css' 'yarn run copy:fonts' 'yarn run copy' && yarn run build:js && yarn run build:jsStatic && yarn run build:objects",
 		"start": "yarn run dev",
-		"dev": "parallelshell 'yarn run clean' 'yarn run build:html' 'yarn run watch:js' 'yarn run watch:css' 'yarn run copy:fonts' 'yarn run watch:fonts' 'yarn run serve'  'yarn run copy' 'yarn run watch:img' 'yarn run watch:html' ",
+		"dev": "parallelshell 'yarn run clean' 'yarn run build:html' 'yarn run watch:js' 'yarn run watch:css' 'yarn run copy:fonts' 'yarn run watch:fonts' 'yarn run serve'  'yarn run copy' 'yarn run watch:img' 'yarn run watch:html' 'yarn run build:jsStatic' 'yarn run build:objects'",
 		"clean": "rimraf ./dist/*",
 		"copy": "copyfiles -u 1 ./src/img/**/** ./dist",
 		"copy:fonts": "copyfiles -u 1 ./src/fonts/**/** ./dist",
 		"build:html": "htmlprocessor ./src/*.html -o './dist/'",
 		"build:js": "browserify ./src/index.js -t babelify | uglifyjs -cm > ./dist/bundle.js",
+		"build:jsStatic": "cpy src/js/* dist/js",
+		"build:objects": "cpy src/objects/* dist/objects",
 		"build:css": "postcss --config './postcss.config.js' ./src/styles/styles.css -o ./dist/styles/styles.css --verbose",
 		"watch:img": "onchange './src/img/*'  './src/img/**/**' -- yarn run copy",
 		"watch:js": "watchify ./src/index.js -t babelify -o ./dist/bundle.js -v",
@@ -28,6 +30,7 @@
 		"browser-sync": "^2.23.6",
 		"browserify": "^16.1.1",
 		"copyfiles": "^2.0.0",
+		"cpy-cli": "^1.0.1",
 		"cssnano": "^3.10.0",
 		"htmlprocessor": "^0.2.6",
 		"onchange": "^3.3.0",
@@ -46,7 +49,6 @@
 		"watchify": "^3.11.0"
 	},
 	"dependencies": {
-		"gsap": "^1.20.4",
-		"three": "^0.92.0"
+		"gsap": "^1.20.4"
 	}
 }
